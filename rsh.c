@@ -142,9 +142,9 @@ int main(int argc, char **argv) {
 			continue;
 		}
 
-		char* message = strtok(NULL, "\n");
+		char* msg = strtok(NULL, "\n");
 
-		if(message == NULL){
+		if(msg == NULL){
 			printf("sendmsg: you have to enter a message\n");
 			continue;
 		}
