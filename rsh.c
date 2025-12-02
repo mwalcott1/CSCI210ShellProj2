@@ -37,7 +37,7 @@ void sendmsg (char *user, char *target, char *msg) {
 	strcpy(sentMsg.target, target);
 	strcpy(sentMsg.msg, msg);
 
-	int fd = open(uName, O_WRONLY);
+	int fd = open("ServerFIFO", O_WRONLY);
 
 	write(fd, &sentMsg, 300);
 
@@ -54,7 +54,7 @@ void* messageListener(void *arg) {
 	// put an end of line at the end of the message
 
 	struct message recvMessage;
-	int fd = open("serverFIFO", O_RDONLY);
+	int fd = open(uName, O_RDONLY);
 
 	while(1){
 		read(fd, &recvMessage, 300);
