@@ -58,7 +58,7 @@ void* messageListener(void *arg) {
 
 	while(1){
 		read(fd, &recvMessage, 300);
-		printf("Incoming message from %s: %s\n", recvMessage->source, recvMessage->msg);
+		printf("Incoming message from %s: %s\n", recvMessage.source, recvMessage.msg);
 	}
 	
 	pthread_exit((void*)0);
