@@ -37,7 +37,7 @@ void sendmsg (char *user, char *target, char *msg) {
 	strcpy(sentMsg.target, target);
 	strcpy(sentMsg.msg, msg);
 
-	int fd = open("ServerFIFO", O_WRONLY);
+	int fd = open("serverFIFO", O_WRONLY);
 
 	write(fd, &sentMsg, 300);
 
