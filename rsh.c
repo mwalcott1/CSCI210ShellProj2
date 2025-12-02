@@ -37,7 +37,7 @@ void sendmsg (char *user, char *target, char *msg) {
 	sentMsg->target = target;
 	sentMsg->msg = msg;
 
-	int fd = open("serverFIFO.lnk", O_WRONLY);
+	int fd = open("serverFIFO", O_WRONLY);
 
 	write(fd, sentMsg, 999);
 
@@ -54,7 +54,7 @@ void* messageListener(void *arg) {
 	// put an end of line at the end of the message
 
 	struct message* recvMessage;
-	int fd = open("serverFIFO.lnk", O_RDONLY);
+	int fd = open("serverFIFO", O_RDONLY);
 
 	while(true){
 		read(fd, recvMessage, 999);
