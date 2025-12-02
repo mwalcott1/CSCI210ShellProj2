@@ -31,13 +31,17 @@ void sendmsg (char *user, char *target, char *msg) {
 	// Send a request to the server to send the message (msg) to the target user (target)
 	// by creating the message structure and writing it to server's FIFO
 
+	struct message* sentMsg;
+	
+	sentMsg->source = user;
+	sentMsg->target = target;
+	sentMsg->msg = msg;
 
+	int fd = open("serverFIFO.lnk", O_WRONLY);
 
+	write(fd, sentMsg, 999);
 
-
-
-
-
+	close(fd);
 }
 
 void* messageListener(void *arg) {
@@ -49,11 +53,14 @@ void* messageListener(void *arg) {
 	// Incoming message from [source]: [message]
 	// put an end of line at the end of the message
 
+	struct message* recvMessage;
+	int fd = open("serverFIFO.lnk", O_RDONLY);
 
-
-
-
-
+	while(true){
+		read(fd, recvMessage, 999);
+		printf("Incoming message from %s: %s\n", recvMessage->source, recvMessage->msg);
+	}
+	
 	pthread_exit((void*)0);
 }
 
@@ -86,9 +93,9 @@ int main(int argc, char **argv) {
     // TODO:
     // create the message listener thread
 
-
-
-
+	pthread_t tid;
+	void* arg;
+	int flag = pthread_create(&tid, NULL, messageListener, arg);
 
     while (1) {
 

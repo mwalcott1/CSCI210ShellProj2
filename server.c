@@ -32,23 +32,19 @@ int main() {
 		// TODO:
 		// read requests from serverFIFO
 
-
-
-
-
-
+		read(server, &req, 999);
+		
 		printf("Received a request from %s to send the message %s to %s.\n",req.source,req.msg,req.target);
 
 		// TODO:
 		// open target FIFO and write the whole message struct to the target FIFO
 		// close target FIFO after writing the message
 
+		int targetFIFO = open(req.target, O_WRONLY);
 
+		write(targetFIFO, &req, 999);
 
-
-
-
-
+		close(targetFIFO);
 	}
 	close(server);
 	close(dummyfd);
