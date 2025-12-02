@@ -31,15 +31,15 @@ void sendmsg (char *user, char *target, char *msg) {
 	// Send a request to the server to send the message (msg) to the target user (target)
 	// by creating the message structure and writing it to server's FIFO
 
-	struct message* sentMsg;
+	struct message sentMsg;
 	
-	strcpy(sentMsg->source, user);
-	strcpy(sentMsg->target, target);
-	strcpy(sentMsg->msg, msg);
+	strcpy(sentMsg.source, user);
+	strcpy(sentMsg.target, target);
+	strcpy(sentMsg.msg, msg);
 
-	int fd = open("serverFIFO", O_WRONLY);
+	int fd = open(uName, O_WRONLY);
 
-	write(fd, sentMsg, 300);
+	write(fd, &sentMsg, 300);
 
 	close(fd);
 }
@@ -53,11 +53,11 @@ void* messageListener(void *arg) {
 	// Incoming message from [source]: [message]
 	// put an end of line at the end of the message
 
-	struct message* recvMessage;
+	struct message recvMessage;
 	int fd = open("serverFIFO", O_RDONLY);
 
 	while(1){
-		read(fd, recvMessage, 300);
+		read(fd, &recvMessage, 300);
 		printf("Incoming message from %s: %s\n", recvMessage->source, recvMessage->msg);
 	}
 	
