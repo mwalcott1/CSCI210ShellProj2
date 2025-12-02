@@ -57,10 +57,11 @@ void* messageListener(void *arg) {
 	int fd = open(uName, O_RDONLY);
 
 	while(1){
-		read(fd, &recvMessage, 300);
-		printf("Incoming message from %s: %s\n", recvMessage.source, recvMessage.msg);
+		if(read(fd, &recvMessage, 300) > 0){
+			printf("Incoming message from %s: %s\n", recvMessage.source, recvMessage.msg);
+		}
 	}
-	
+
 	pthread_exit((void*)0);
 }
 
@@ -134,19 +135,19 @@ int main(int argc, char **argv) {
 		// if no message is specified, you should print the followingA
  		// printf("sendmsg: you have to enter a message\n");
 
-		if(!strcmp(line, "\0")){
+		char* user = strtok(NULL, " ");
+
+		if(user == NULL){
 			printf("sendmsg: you have to specify target user\n");
+			continue;
 		}
 
-		char user[256];
-		strcpy(user, strtok(NULL, " "));
+		char* message = strtok(NULL, "\n");
 
-		if(!strcmp(line, "\0")){
+		if(message == NULL){
 			printf("sendmsg: you have to enter a message\n");
+			continue;
 		}
-
-		char msg[256];
-		strcpy(msg, line);
 
 		sendmsg(uName, user, msg);
 
