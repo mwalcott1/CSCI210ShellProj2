@@ -33,13 +33,13 @@ void sendmsg (char *user, char *target, char *msg) {
 
 	struct message* sentMsg;
 	
-	sentMsg->source = user;
-	sentMsg->target = target;
-	sentMsg->msg = msg;
+	strcpy(sentMsg->source, user);
+	strcpy(sentMsg->target, target);
+	strcpy(sentMsg->msg, msg);
 
 	int fd = open("serverFIFO", O_WRONLY);
 
-	write(fd, sentMsg, 999);
+	write(fd, sentMsg, 300);
 
 	close(fd);
 }
@@ -56,8 +56,8 @@ void* messageListener(void *arg) {
 	struct message* recvMessage;
 	int fd = open("serverFIFO", O_RDONLY);
 
-	while(true){
-		read(fd, recvMessage, 999);
+	while(1){
+		read(fd, recvMessage, 300);
 		printf("Incoming message from %s: %s\n", recvMessage->source, recvMessage->msg);
 	}
 	
@@ -94,8 +94,11 @@ int main(int argc, char **argv) {
     // create the message listener thread
 
 	pthread_t tid;
-	void* arg;
+	void* arg = NULL;
 	int flag = pthread_create(&tid, NULL, messageListener, arg);
+	if(flag != 0){
+		printf("User message listener process creation failed");
+	}
 
     while (1) {
 
@@ -131,14 +134,21 @@ int main(int argc, char **argv) {
 		// if no message is specified, you should print the followingA
  		// printf("sendmsg: you have to enter a message\n");
 
+		if(!strcmp(line, "\0")){
+			printf("sendmsg: you have to specify target user\n");
+		}
 
+		char user[256];
+		strcpy(user, strtok(NULL, " "));
 
+		if(!strcmp(line, "\0")){
+			printf("sendmsg: you have to enter a message\n");
+		}
 
+		char msg[256];
+		strcpy(msg, line);
 
-
-
-
-
+		sendmsg(uName, user, msg);
 
 		continue;
 	}
